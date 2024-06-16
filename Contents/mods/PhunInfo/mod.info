@@ -3,3 +3,4 @@ name=PhunInfo
 id=PhunInfo
 description=News and info center for servers
 poster=poster.png
+require=PhunTools
