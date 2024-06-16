@@ -16,7 +16,6 @@ local HEADER_HGT = FONT_HGT_MEDIUM + 2 * 2
 
 function PhunInfoStatsPanel:initialise()
     ISPanel.initialise(self);
-
 end
 
 function PhunInfoStatsPanel:new(x, y, width, height, viewer)
