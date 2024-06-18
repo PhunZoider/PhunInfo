@@ -182,7 +182,7 @@ function PhunInfoUI:createChildren()
     self:setScrollChildren(true)
     self:addScrollBars()
 
-    self:addChild(getLabel(getText("UI_PhunInfo_Title"), 10, 25, 400, FONT_HGT_MEDIUM))
+    self:addChild(getLabel(SandboxVars.PhunInfo.PhunInfoServerName or "", 10, 25, 400, FONT_HGT_MEDIUM))
 
     self.closeButton = ISButton:new(self.width - 35, 10, 25, 25, "X", self, self.close)
     self.closeButton:initialise()

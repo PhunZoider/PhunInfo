@@ -7,3 +7,11 @@ option PhunInfo.PhunInfoDiscordUrl
     page = PhunInfo,
     translation = PhunInfoDiscordUrl 
 }
+
+option PhunInfo.PhunInfoServerName
+{ 
+    type = string,
+    default = PhunZoid,
+    page = PhunInfo,
+    translation = PhunInfoServerName
+}

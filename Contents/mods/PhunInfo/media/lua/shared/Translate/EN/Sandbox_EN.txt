@@ -2,4 +2,7 @@ Sandbox_EN = {
     Sandbox_PhunInfo = "PhunInfo"
     Sandbox_PhunInfoDiscordUrl = "Discord URL",
     Sandbox_PhunInfoDiscordUrl_tooltip = "The url that is copied to players clipboard when clicking an item where the onclick=discordUrl",
+
+    Sandbox_PhunInfoDiscordUrl = "Discord URL",
+    Sandbox_PhunInfoDiscordUrl_tooltip = "The url that is copied to players clipboard when clicking an item where the onclick=discordUrl",
 }
