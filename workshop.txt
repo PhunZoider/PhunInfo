@@ -1,4 +1,6 @@
 version=1
-title=PhunWallet
-description=BoP Wallet and currency management
+id=3270427596
+title=PhunInfo
+description=Server news and info panel
 tags=Build 41
+visibility=public

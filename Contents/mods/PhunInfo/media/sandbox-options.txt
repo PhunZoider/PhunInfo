@@ -1,0 +1,9 @@
+VERSION = 1,
+
+option PhunInfo.PhunInfoDiscordUrl
+{ 
+    type = string,
+    default = https://discord.gg/v2USyAtP6q,
+    page = PhunInfo,
+    translation = PhunInfoDiscordUrl 
+}

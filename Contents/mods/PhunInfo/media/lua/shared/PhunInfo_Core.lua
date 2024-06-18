@@ -18,7 +18,7 @@ PhunInfo = {
 }
 
 PhunInfo.clickCommands["discordUrl"] = function()
-    Clipboard.setClipboard("https://discord.gg/v2USyAtP6q");
+    Clipboard.setClipboard(SandboxVars.PhunInfo.PhunInfoDiscordUrl or "https://discord.gg/v2USyAtP6q");
     local w = 300
     local h = 150
     local modal = ISModalDialog:new(getCore():getScreenWidth() / 2 - w / 2, getCore():getScreenHeight() / 2 - h / 2, w,
