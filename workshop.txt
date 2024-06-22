@@ -2,5 +2,9 @@ version=1
 id=3270427596
 title=PhunInfo
 description=Server news and info panel
+description=
+description=beta testing! Currently play testing and balance tweaking on PhunZoid server
+description=[url=https://github.com/PhunZoider/PhunInfo]Repo and more info[/url]
+description=
 tags=Build 41;Interface
 visibility=public

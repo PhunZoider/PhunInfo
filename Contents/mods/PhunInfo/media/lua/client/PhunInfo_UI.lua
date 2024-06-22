@@ -37,7 +37,7 @@ function PhunInfoUI.OnOpenPanel(playerObj)
 
     if PhunInfoUI.instances[pNum] then
         triggerEvent(PhunZones.events.OnPhunZoneWelcomeOpened, PhunInfoUI.instances[pNum])
-        if PhunInfoUI.instances[pNum] and PhunInfoUI.instances[pNum].rebuild then 
+        if PhunInfoUI.instances[pNum] and PhunInfoUI.instances[pNum].rebuild then
             PhunInfoUI.instances[pNum]:rebuild()
         end
         return PhunInfoUI.instances[pNum]
@@ -122,6 +122,8 @@ function PhunInfoUI:onMouseMove(dx, dy)
             self.dragging = true
             self:setCapture(true)
         end
+    elseif self.dragging then
+        self.dragging = false
     end
 
     if self.dragging then
@@ -280,7 +282,6 @@ function PhunInfoUI:tabsRender()
 end
 
 function PhunInfoUI:rebuild()
-
 
     if self.statsPanel and self.statsPanel.rebuild then
         self.statsPanel:rebuild()
