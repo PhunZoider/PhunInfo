@@ -63,14 +63,17 @@ function PhunInfoPlayersPanel:createChildren()
     self.datas.font = UIFont.NewSmall;
     self.datas.doDrawItem = self.drawDatas;
     self.datas.drawBorder = true;
-    self.datas:addColumn("Category", 0);
-    self.datas:addColumn("Value", 200);
+    self.datas:addColumn("Player", 0);
+    self.datas:addColumn("Last Seen (Game Days)", 200);
     self:addChild(self.datas);
 end
 
 function PhunInfoPlayersPanel:rebuild()
     self.datas:clear();
     local stats = PhunStats.lastOnlinePlayers or {}
+    table.sort(stats, function(a, b)
+        return a.lastWorldHours < b.lastWorldHours
+    end)
     local items = {}
     for i, item in pairs(stats) do
         self.datas:addItem(i, item)

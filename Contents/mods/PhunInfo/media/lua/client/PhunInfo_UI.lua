@@ -190,12 +190,14 @@ function PhunInfoUI:createChildren()
     self.closeButton:initialise()
     self:addChild(self.closeButton)
 
-    -- self.refreshButton = ISButton:new(self.width - 100, 10, 50, 25, "Refresh", self, function()
-    --     -- self.infoPanel:clearChildren()
-    --     sendClientCommand(self.player, PhunInfo.name, PhunInfo.commands.reload, {})
-    -- end)
-    -- self.refreshButton:initialise()
-    -- self:addChild(self.refreshButton)
+    if isAdmin() then
+        self.refreshButton = ISButton:new(self.width - 100, 10, 50, 25, "Refresh", self, function()
+            -- self.infoPanel:clearChildren()
+            sendClientCommand(self.player, PhunInfo.name, PhunInfo.commands.reload, {})
+        end)
+        self.refreshButton:initialise()
+        self:addChild(self.refreshButton)
+    end
 
     self.tabPanel = ISTabPanel:new(10, 75, self.width - 20, self.height - 75)
     self.tabPanel:initialise()
