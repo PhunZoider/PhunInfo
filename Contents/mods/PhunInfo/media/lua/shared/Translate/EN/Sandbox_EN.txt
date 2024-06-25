@@ -3,6 +3,9 @@ Sandbox_EN = {
     Sandbox_PhunInfoDiscordUrl = "Discord URL",
     Sandbox_PhunInfoDiscordUrl_tooltip = "The url that is copied to players clipboard when clicking an item where the onclick=discordUrl",
 
-    Sandbox_PhunInfoServerNameUrl = "Server Name",
-    Sandbox_PPhunInfoServerName_tooltip = "The name of your server",
+    Sandbox_PhunInfoServerName = "Server Name",
+    Sandbox_PhunInfoServerName_tooltip = "The name of your server",
+
+    Sandbox_PhunInfoStatsShowPvP = "Show PvP Stats",
+    Sandbox_PhunInfoStatsShowPvP_tooltip = "Show/Hide pvp related stats",
 }

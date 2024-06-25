@@ -73,9 +73,46 @@ function PhunInfoLeaderPanel:rebuild()
     self.datas:clear();
     local stats = PhunStats.leaderboard or {}
     local items = {}
-    for i, item in pairs(stats) do
-        self.datas:addItem(i, item)
+    local currentCatagories = {}
+
+    if SandboxVars.PhunInfo.PhunInfoStatsShowPvP then
+        currentCatagories = {
+            hours = 0,
+            kills = 0,
+            deaths = 0,
+            -- damage = 0,
+            -- damage_taken = 0,
+            car_kills = 0,
+            pvp_kills = 0,
+            pvp_car_kills = 0,
+            pvp_deaths = 0,
+            ampules = 0,
+            smokes = 0,
+            sprinters = 0
+        }
+    else
+        currentCatagories = {
+            hours = 0,
+            kills = 0,
+            deaths = 0,
+            -- damage = 0,
+            -- damage_taken = 0,
+            ampules = 0,
+            smokes = 0,
+            sprinters = 0
+        }
     end
+
+    for i, v in pairs(currentCatagories) do
+        self.datas:addItem(i, {
+            text = _,
+            value = stats[v]
+        })
+    end
+
+    -- for i, item in pairs(stats) do
+    --     self.datas:addItem(i, item)
+    -- end
 end
 
 function PhunInfoLeaderPanel:prerender()

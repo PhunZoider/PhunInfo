@@ -67,19 +67,35 @@ function PhunInfoTotalsPanel:createChildren()
     self.datas:addColumn("Category", 0);
     self.datas:addColumn("Value", 200);
 
-    local totalCategories = {
-        hours = 0,
-        deaths = 0,
-        pvp_deaths = 0,
-        kills = 0,
-        car_kills = 0,
-        pvp_kills = 0,
-        damage = 0,
-        damage_taken = 0,
-        ampules = 0,
-        smokes = 0
+    local totalCategories = {}
 
-    }
+    if SandboxVars.PhunInfo.PhunInfoStatsShowPvP then
+        totalCategories = {
+            hours = 0,
+            deaths = 0,
+            pvp_deaths = 0,
+            kills = 0,
+            car_kills = 0,
+            pvp_kills = 0,
+            -- damage = 0,
+            -- damage_taken = 0,
+            ampules = 0,
+            smokes = 0
+
+        }
+    else
+        totalCategories = {
+            hours = 0,
+            deaths = 0,
+            kills = 0,
+            car_kills = 0,
+            -- damage = 0,
+            -- damage_taken = 0,
+            ampules = 0,
+            smokes = 0
+
+        }
+    end
     for k, v in pairs(totalCategories) do
         self.datas:addItem(k, {
             name = k,

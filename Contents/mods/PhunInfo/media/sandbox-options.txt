@@ -15,3 +15,11 @@ option PhunInfo.PhunInfoServerName
     page = PhunInfo,
     translation = PhunInfoServerName
 }
+
+option PhunInfo.PhunInfoStatsShowPvP
+{ 
+    type = boolean,
+    default = true,
+    page = PhunInfo,
+    translation = PhunInfoStatsShowPvP
+}
