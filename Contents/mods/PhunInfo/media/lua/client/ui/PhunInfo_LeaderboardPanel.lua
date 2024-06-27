@@ -105,7 +105,7 @@ function PhunInfoLeaderPanel:rebuild()
 
     for i, v in pairs(currentCatagories) do
         self.datas:addItem(i, {
-            text = _,
+            text = tostring(i),
             value = stats[v]
         })
     end

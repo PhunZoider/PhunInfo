@@ -72,7 +72,7 @@ function PhunInfoPlayersPanel:rebuild()
     self.datas:clear();
     local stats = PhunStats.lastOnlinePlayers or {}
     table.sort(stats, function(a, b)
-        return a.lastWorldHours < b.lastWorldHours
+        return a.lastonline > b.lastonline
     end)
     local items = {}
     for i, item in pairs(stats) do
