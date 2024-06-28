@@ -77,6 +77,7 @@ function PhunInfoCurrentPanel:createChildren()
             pvp_kills = 0,
             -- damage = 0,
             -- damage_taken = 0,
+            sprinters = 0,
             ampules = 0,
             smokes = 0
         }
@@ -85,6 +86,7 @@ function PhunInfoCurrentPanel:createChildren()
             hours = 0,
             kills = 0,
             car_kills = 0,
+            sprinters = 0,
             -- damage = 0,
             -- damage_taken = 0,
             ampules = 0,
