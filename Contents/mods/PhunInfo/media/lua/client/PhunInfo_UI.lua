@@ -47,7 +47,7 @@ function PhunInfoUI.OnOpenPanel(playerObj)
     local FONT_SCALE = getTextManager():getFontHeight(UIFont.Small) / 14
     local core = getCore()
     local width = 400 * FONT_SCALE
-    local height = 600 * FONT_SCALE
+    local height = 500 * FONT_SCALE
     local x = (core:getScreenWidth() - width) - 20
     local y = (core:getScreenHeight() / 2) - (height / 2)
 
