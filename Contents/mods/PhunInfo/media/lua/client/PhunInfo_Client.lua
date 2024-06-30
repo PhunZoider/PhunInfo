@@ -7,7 +7,9 @@ local function setup()
     Events.EveryOneMinute.Remove(setup)
     for i = 1, getOnlinePlayers():size() do
         local p = getOnlinePlayers():get(i - 1)
-        PhunInfoUI.OnOpenPanel(p)
+        if p:isLocalPlayer() then
+            PhunInfoUI.OnOpenPanel(p)
+        end
     end
     sendClientCommand(PhunInfo.name, PhunInfo.commands.requestData, {})
 end

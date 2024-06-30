@@ -62,10 +62,20 @@ function PhunInfoPlayersPanel:createChildren()
     self.datas.joypadParent = self;
     self.datas.font = UIFont.NewSmall;
     self.datas.doDrawItem = self.drawDatas;
+    self.datas.onMouseMove = self.doOnMouseMove
+    self.datas.onMouseMoveOutside = self.doOnMouseMoveOutside
     self.datas.drawBorder = true;
     self.datas:addColumn("Player", 0);
     self.datas:addColumn("Last Seen (Game Days)", 200);
     self:addChild(self.datas);
+
+    self.tooltip = ISToolTip:new();
+    self.tooltip:initialise();
+    self.tooltip:setVisible(false);
+    self.tooltip:setAlwaysOnTop(true)
+    self.tooltip.description = "";
+    self.tooltip:setOwner(self.datas)
+
 end
 
 function PhunInfoPlayersPanel:rebuild()
@@ -78,6 +88,88 @@ function PhunInfoPlayersPanel:rebuild()
     for i, item in pairs(stats) do
         self.datas:addItem(i, item)
     end
+end
+
+function PhunInfoPlayersPanel:doTooltip()
+    local rectWidth = 10;
+
+    local title = "Hello";
+    local description = "Tooltop desc"
+    local heightPadding = 2
+    local rectHeight = 100 + 100 + (heightPadding * 3);
+
+    local x = self:getMouseX() + 20;
+    local y = self:getMouseY() + 20;
+
+    self:drawRect(x, y, rectWidth + 100, rectHeight, 1.0, 0.0, 0.0, 0.0);
+    self:drawRectBorder(x, y, rectWidth + 100, rectHeight, 0.7, 0.4, 0.4, 0.4);
+    self:drawText(title or "???", x + 2, y + 2, 1, 1, 1, 1);
+    self:drawText(description or "???", x + 2, y + 100 + (heightPadding * 2), 1, 1, 1, 0.7);
+end
+
+function PhunInfoPlayersPanel:doOnMouseMoveOutside(dx, dy)
+    local tooltip = self.parent.tooltip
+    tooltip:setVisible(false)
+    tooltip:removeFromUIManager()
+end
+
+local months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+                "November", "December"}
+
+function PhunInfoPlayersPanel:doOnMouseMove(dx, dy)
+
+    local showInvTooltipForItem = nil
+    local item = nil
+    local tooltip = nil
+
+    if not self.dragging and self.rowAt then
+        if self:isMouseOver() then
+            local row = self:rowAt(self:getMouseX(), self:getMouseY())
+            if row ~= nil and row > 0 then
+                item = self.items[row] and self.items[row].item
+                if item then
+                    tooltip = self.parent.tooltip
+                    local viewer = self.parent.viewer
+                    tooltip:setName(item.username)
+                    local desc = {}
+
+                    if item.online then
+                        table.insert(desc, "Online Now")
+                        -- elseif isAdmin() then
+                        --     table.insert(desc,
+                        --         "Last Seen: " .. PhunTools:getWorldAgeDiffAsString(item.lastWorldHours) .. "ago  (" ..
+                        --             tostring(PhunTools:formatWholeNumber(item.lastWorldHours)) .. ")")
+                        -- else
+                        --     table.insert(desc, "Last Seen: " ..
+                        --         PhunTools:getWorldAgeDiffAsString(PhunTools:formatWholeNumber(item.lastWorldHours)) ..
+                        --         " ago")
+                    end
+
+                    if item.lastgamemonth and months[item.lastgamemonth] then
+                        table.insert(desc, "Last seen")
+                        if item.lastgameyear then
+                            table.insert(desc, months[item.lastgamemonth] .. " " .. item.lastgameday .. ", " ..
+                                item.lastgameyear)
+                        else
+                            table.insert(desc, months[item.lastgamemonth] .. " " .. item.lastgameday .. ", 1993")
+                        end
+                    end
+
+                    tooltip.description = table.concat(desc, "\n")
+                    if not tooltip:isVisible() then
+
+                        tooltip:addToUIManager();
+                        tooltip:setVisible(true)
+                    end
+                    tooltip:bringToTop()
+                elseif self.parent.tooltip:isVisible() then
+                    self.parent.tooltip:setVisible(false)
+                    self.parent.tooltip:removeFromUIManager()
+                end
+            end
+        end
+    end
+
 end
 
 function PhunInfoPlayersPanel:drawDatas(y, item, alt)
