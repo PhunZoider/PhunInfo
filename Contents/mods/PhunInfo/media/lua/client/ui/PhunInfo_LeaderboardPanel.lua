@@ -73,41 +73,154 @@ function PhunInfoLeaderPanel:rebuild()
     self.datas:clear();
     local stats = PhunStats.leaderboard or {}
     local items = {}
-    local currentCatagories = {}
-
-    if SandboxVars.PhunInfo.PhunInfoStatsShowPvP then
-        currentCatagories = {
-            hours = 0,
-            kills = 0,
-            deaths = 0,
-            -- damage = 0,
-            -- damage_taken = 0,
-            car_kills = 0,
-            pvp_kills = 0,
-            pvp_car_kills = 0,
-            pvp_deaths = 0,
-            ampules = 0,
-            smokes = 0,
-            sprinters = 0
+    local currentCatagories = {
+        hours = {
+            text = "hours",
+            label = "Hours",
+            value = 0,
+            current = true
+        },
+        totalHours = {
+            text = "hours",
+            label = "Total hours",
+            value = 0
+        },
+        kills = {
+            text = "kills",
+            label = "Kills",
+            value = 0,
+            current = true
+        },
+        totalKills = {
+            text = "kills",
+            label = "Total kills",
+            value = 0,
+            current = false
+        },
+        carKills = {
+            text = "kills",
+            label = "Kills",
+            value = 0,
+            current = true
+        },
+        totalCarKills = {
+            text = "car_kills",
+            label = "Total Car kills",
+            value = 0,
+            current = false
+        },
+        sprinters = {
+            text = "sprinters",
+            label = "Sprinters killed",
+            value = 0,
+            current = true
+        },
+        totalSprinters = {
+            text = "sprinters",
+            label = "Total sprinters killes",
+            value = 0,
+            current = false
+        },
+        pvpKills = {
+            text = "pvp_kills",
+            label = "PvP kills",
+            value = 0,
+            current = true,
+            pvp = true
+        },
+        totalPvpKills = {
+            text = "pvp_kills",
+            label = "Total PvP kills",
+            value = 0,
+            current = false,
+            pvp = true
+        },
+        pvpCarKills = {
+            text = "pvp_car_kills",
+            label = "PvP car kills",
+            value = 0,
+            current = true,
+            pvp = true
+        },
+        totalPvpCarKills = {
+            text = "pvp_car_kills",
+            label = "Total PvP car kills",
+            value = 0,
+            current = false,
+            pvp = true
+        },
+        deaths = {
+            text = "deaths",
+            label = "Deaths",
+            value = 0,
+            current = false
+        },
+        totalPvpDeaths = {
+            text = "pvp_deaths",
+            label = "PvP deaths",
+            value = 0,
+            current = false,
+            pvp = true
+        },
+        ampules = {
+            text = "ampules",
+            label = "Ampules broken",
+            value = 0,
+            current = true
+        },
+        totalAmpules = {
+            text = "ampules",
+            label = "Total ampules broken",
+            value = 0,
+            current = false
+        },
+        smokes = {
+            text = "smokes",
+            label = "Smoke breaks",
+            value = 0,
+            current = true
+        },
+        totalSmokes = {
+            text = "smokes",
+            label = "Total smoke breaks",
+            value = 0,
+            current = false
         }
-    else
-        currentCatagories = {
-            hours = 0,
-            kills = 0,
-            deaths = 0,
-            -- damage = 0,
-            -- damage_taken = 0,
-            ampules = 0,
-            smokes = 0,
-            sprinters = 0
-        }
-    end
+    }
 
-    for i, v in pairs(currentCatagories) do
-        self.datas:addItem(i, {
-            text = tostring(i),
-            value = stats[v]
-        })
+    -- if SandboxVars.PhunInfo.PhunInfoStatsShowPvP then
+    --     currentCatagories = {
+    --         hours = 0,
+    --         kills = 0,
+    --         deaths = 0,
+    --         -- damage = 0,
+    --         -- damage_taken = 0,
+    --         car_kills = 0,
+    --         pvp_kills = 0,
+    --         pvp_car_kills = 0,
+    --         pvp_deaths = 0,
+    --         ampules = 0,
+    --         smokes = 0,
+    --         sprinters = 0
+    --     }
+    -- else
+    --     currentCatagories = {
+    --         hours = 0,
+    --         kills = 0,
+    --         deaths = 0,
+    --         -- damage = 0,
+    --         -- damage_taken = 0,
+    --         car_kills = 0,
+    --         ampules = 0,
+    --         smokes = 0,
+    --         sprinters = 0
+    --     }
+    -- end
+
+    for k, v in pairs(currentCatagories) do
+        if not v.pvp or SandboxVars.PhunInfo.PhunInfoStatsShowPvP == false then
+            self.datas:addItem(k, v)
+        end
     end
 
     -- for i, item in pairs(stats) do
@@ -117,13 +230,15 @@ end
 
 function PhunInfoLeaderPanel:prerender()
     local ps = PhunStats
-    local stats = ps.leaderboard
+    local stats = ps.leaderboard or {}
     local items = {}
     for i, item in pairs(self.datas.items) do
-        local stat = stats[item.text]
+        local from = item.current and "current" or "total"
+        local stat = stats[from][item.item.text]
         if stat then
             item.value = PhunTools:formatWholeNumber(stat.value or item.value)
             item.who = stat.who or item.who
+            item.label = item.item.label
         end
     end
     ISPanel.prerender(self);
@@ -157,16 +272,14 @@ function PhunInfoLeaderPanel:drawDatas(y, item, alt)
     local clipY2 = math.min(self.height, y + self:getYScroll() + self.itemheight)
 
     self:setStencilRect(clipX, clipY, clipX2 - clipX, clipY2 - clipY)
-    self:drawText(getText("UI_PhunInfo_" .. item.text), xoffset, y + 4, 1, 1, 1, a, self.font);
+    self:drawText(getTextOrNull("UI_PhunInfo_" .. item.text) or item.label or item.text, xoffset, y + 4, 1, 1, 1, a,
+        self.font);
     self:clearStencilRect()
-
-    local viewer = self.parent.viewer
-    local stats = PhunStats.leaderboard[item.text] or {}
 
     clipX = self.columns[2].size
     clipX2 = self.columns[3].size
     self:setStencilRect(clipX, clipY, clipX2 - clipX, clipY2 - clipY)
-    self:drawText(stats.who or "", clipX + xoffset, y + 4, 1, 1, 1, a, self.font);
+    self:drawText(item.who or "", clipX + xoffset, y + 4, 1, 1, 1, a, self.font);
     self:clearStencilRect()
 
     local value = item.value
