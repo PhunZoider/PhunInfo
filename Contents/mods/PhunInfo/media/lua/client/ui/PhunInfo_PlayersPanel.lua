@@ -51,6 +51,12 @@ function PhunInfoPlayersPanel:new(x, y, width, height, viewer)
     return o;
 end
 
+function PhunInfoPlayersPanel:GridDoubleClick(item)
+    if isAdmin() then
+        PhunInfoAdminPlayersUI.OnOpenPanel(item)
+    end
+end
+
 function PhunInfoPlayersPanel:createChildren()
     ISPanel.createChildren(self);
 
@@ -64,6 +70,7 @@ function PhunInfoPlayersPanel:createChildren()
     self.datas.doDrawItem = self.drawDatas;
     self.datas.onMouseMove = self.doOnMouseMove
     self.datas.onMouseMoveOutside = self.doOnMouseMoveOutside
+    self.datas:setOnMouseDoubleClick(self, self.GridDoubleClick)
     self.datas.drawBorder = true;
     self.datas:addColumn("Player", 0);
     self.datas:addColumn("Last Seen (Game Days)", 200);

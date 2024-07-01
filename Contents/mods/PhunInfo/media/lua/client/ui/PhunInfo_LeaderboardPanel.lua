@@ -98,8 +98,8 @@ function PhunInfoLeaderPanel:rebuild()
             current = false
         },
         carKills = {
-            text = "kills",
-            label = "Kills",
+            text = "car_kills",
+            label = "Car Kills",
             value = 0,
             current = true
         },
@@ -218,7 +218,7 @@ function PhunInfoLeaderPanel:rebuild()
     -- end
 
     for k, v in pairs(currentCatagories) do
-        if not v.pvp or SandboxVars.PhunInfo.PhunInfoStatsShowPvP == false then
+        if not v.pvp or SandboxVars.PhunInfo.PhunInfoStatsShowPvP then
             self.datas:addItem(k, v)
         end
     end
@@ -233,7 +233,10 @@ function PhunInfoLeaderPanel:prerender()
     local stats = ps.leaderboard or {}
     local items = {}
     for i, item in pairs(self.datas.items) do
-        local from = item.current and "current" or "total"
+        local from = "total"
+        if item.item.current then
+            from = "current"
+        end
         local stat = stats[from][item.item.text]
         if stat then
             item.value = PhunTools:formatWholeNumber(stat.value or item.value)

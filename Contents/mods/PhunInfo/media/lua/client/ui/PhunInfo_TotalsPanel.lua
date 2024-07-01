@@ -140,7 +140,8 @@ function PhunInfoTotalsPanel:drawDatas(y, item, alt)
     local clipY2 = math.min(self.height, y + self:getYScroll() + self.itemheight)
 
     self:setStencilRect(clipX, clipY, clipX2 - clipX, clipY2 - clipY)
-    self:drawText(getText("UI_PhunInfo_" .. item.item.name), xoffset, y + 4, 1, 1, 1, a, self.font);
+    self:drawText(getTextOrNull("UI_PhunInfo_" .. item.item.name) or item.item.name, xoffset, y + 4, 1, 1, 1, a,
+        self.font);
     self:clearStencilRect()
 
     local viewer = self.parent.viewer
