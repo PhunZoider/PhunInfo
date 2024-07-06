@@ -86,14 +86,18 @@ function PhunInfoPlayersPanel:createChildren()
 end
 
 function PhunInfoPlayersPanel:rebuild()
-    self.datas:clear();
+
     local stats = PhunStats.lastOnlinePlayers or {}
-    table.sort(stats, function(a, b)
+    local vals = {}
+    for i, item in pairs(stats) do
+        table.insert(vals, item)
+    end
+    table.sort(vals, function(a, b)
         return a.lastonline > b.lastonline
     end)
-    local items = {}
-    for i, item in pairs(stats) do
-        self.datas:addItem(i, item)
+    self.datas:clear();
+    for _, item in ipairs(vals) do
+        self.datas:addItem(item.username, item)
     end
 end
 
@@ -141,7 +145,7 @@ function PhunInfoPlayersPanel:doOnMouseMove(dx, dy)
                     local desc = {}
 
                     if item.online then
-                        table.insert(desc, "Online Now")
+                        table.insert(desc, getText("UI_PhunInfo_Online"))
                         -- elseif isAdmin() then
                         --     table.insert(desc,
                         --         "Last Seen: " .. PhunTools:getWorldAgeDiffAsString(item.lastWorldHours) .. "ago  (" ..
