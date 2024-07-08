@@ -98,6 +98,14 @@ function PhunInfoTotalsPanel:createChildren()
 
         }
     end
+
+    if SandboxVars.PhunInfo.ShowRunningStats then
+        totalCategories.runDistance = 0
+        totalCategories.runDuration = 0
+        totalCategories.sprintDistance = 0
+        totalCategories.sprintDuration = 0
+    end
+
     for k, v in pairs(totalCategories) do
         self.datas:addItem(k, {
             name = k,

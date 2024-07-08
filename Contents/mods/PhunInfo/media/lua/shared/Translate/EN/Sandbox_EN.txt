@@ -8,4 +8,8 @@ Sandbox_EN = {
 
     Sandbox_PhunInfoStatsShowPvP = "Show PvP Stats",
     Sandbox_PhunInfoStatsShowPvP_tooltip = "Show/Hide pvp related stats",
+
+    Sandbox_PhunInfo_ShowRunningStats = "Show Running Stats",
+    Sandbox_PhunInfo_ShowRunningStats_tooltip = "Show/Hide running stats",
+
 }

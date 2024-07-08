@@ -94,6 +94,13 @@ function PhunInfoCurrentPanel:createChildren()
         }
     end
 
+    if SandboxVars.PhunInfo.ShowRunningStats then
+        currentCatagories.runDistance = 0
+        currentCatagories.runDuration = 0
+        currentCatagories.sprintDistance = 0
+        currentCatagories.sprintDuration = 0
+    end
+
     for k, v in pairs(currentCatagories) do
         self.datas:addItem(k, {
             name = k,

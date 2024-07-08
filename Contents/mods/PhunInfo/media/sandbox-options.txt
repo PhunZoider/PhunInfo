@@ -23,3 +23,20 @@ option PhunInfo.PhunInfoStatsShowPvP
     page = PhunInfo,
     translation = PhunInfoStatsShowPvP
 }
+
+option PhunInfo.CollectRunningStats
+{ 
+    type = boolean,
+    default = true,
+    page = PhunInfo,
+    translation = PhunInfo_CollectRunningStats
+}
+
+option PhunInfo.ShowRunningStats
+{ 
+    type = boolean,
+    default = true,
+    page = PhunInfo,
+    translation = PhunInfo_ShowRunningStats
+}
+

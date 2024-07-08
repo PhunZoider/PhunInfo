@@ -146,14 +146,6 @@ function PhunInfoPlayersPanel:doOnMouseMove(dx, dy)
 
                     if item.online then
                         table.insert(desc, getText("UI_PhunInfo_Online"))
-                        -- elseif isAdmin() then
-                        --     table.insert(desc,
-                        --         "Last Seen: " .. PhunTools:getWorldAgeDiffAsString(item.lastWorldHours) .. "ago  (" ..
-                        --             tostring(PhunTools:formatWholeNumber(item.lastWorldHours)) .. ")")
-                        -- else
-                        --     table.insert(desc, "Last Seen: " ..
-                        --         PhunTools:getWorldAgeDiffAsString(PhunTools:formatWholeNumber(item.lastWorldHours)) ..
-                        --         " ago")
                     end
 
                     if item.lastgamemonth and months[item.lastgamemonth] then

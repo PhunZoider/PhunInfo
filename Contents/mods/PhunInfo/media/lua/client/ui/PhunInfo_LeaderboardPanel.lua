@@ -186,7 +186,59 @@ function PhunInfoLeaderPanel:rebuild()
             value = 0,
             current = false
         }
+
     }
+
+    if SandboxVars.PhunInfo.ShowRunningStats then
+        currentCatagories.runDistance = {
+            text = "runDistance",
+            label = "Run distance",
+            value = 0,
+            current = true
+        }
+        currentCatagories.totalRunDistance = {
+            text = "runDistance",
+            label = "Total run distance",
+            value = 0,
+            current = false
+        }
+        currentCatagories.runDuration = {
+            text = "runDuration",
+            label = "Run duration",
+            value = 0,
+            current = true
+        }
+        currentCatagories.totalRunDuration = {
+            text = "runDuration",
+            label = "Total run duration",
+            value = 0,
+            current = false
+        }
+        currentCatagories.sprintDistance = {
+            text = "sprintDistance",
+            label = "Sprint distance",
+            value = 0,
+            current = true
+        }
+        currentCatagories.totalSprintDistance = {
+            text = "sprintDistance",
+            label = "Total sprint distance",
+            value = 0,
+            current = false
+        }
+        currentCatagories.sprintDuration = {
+            text = "sprintDuration",
+            label = "Sprint duration",
+            value = 0,
+            current = true
+        }
+        currentCatagories.totalSprintDuration = {
+            text = "sprintDuration",
+            label = "Total sprint duration",
+            value = 0,
+            current = false
+        }
+    end
 
     -- if SandboxVars.PhunInfo.PhunInfoStatsShowPvP then
     --     currentCatagories = {
