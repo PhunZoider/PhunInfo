@@ -1,12 +1,12 @@
 if not isClient() then
     return
 end
-require "ISUI/ISPanelJoypad"
+require "ISUI/ISCollapsableWindowJoypad"
 require("ui/PhunInfo_InfoPanel.lua")
 require("ui/PhunInfo_StatsPanel.lua")
 require("ui/PhunInfo_LeaderboardPanel.lua")
 require("ui/PhunInfo_PlayersPanel.lua")
-PhunInfoUI = ISPanelJoypad:derive("PhunInfoUI");
+PhunInfoUI = ISCollapsableWindowJoypad:derive("PhunInfoUI");
 PhunInfoUI.instances = {}
 local PhunZones = PhunZones
 
@@ -22,25 +22,20 @@ local function getLabel(text, x, y, w, h)
     return lbl
 end
 
-function PhunInfoUI:toggleVisibility(playerObj)
-    local win = PhunInfoUI.instances[playerObj:getPlayerNum()]
-    if win and win:isVisible() then
-        win:close()
-    else
-        PhunInfoUI.OnOpenPanel(playerObj)
-    end
-end
-
 function PhunInfoUI.OnOpenPanel(playerObj)
 
     local pNum = playerObj:getPlayerNum()
 
     if PhunInfoUI.instances[pNum] then
-        triggerEvent(PhunZones.events.OnPhunZoneWelcomeOpened, PhunInfoUI.instances[pNum])
-        if PhunInfoUI.instances[pNum] and PhunInfoUI.instances[pNum].rebuild then
-            PhunInfoUI.instances[pNum]:rebuild()
+        if not PhunInfoUI.instances[pNum]:isVisible() then
+            PhunInfoUI.instances[pNum]:addToUIManager();
+            PhunInfoUI.instances[pNum]:setVisible(true);
+            return
+        elseif PhunInfoUI.instances[pNum].isCollapsed then
+            PhunInfoUI.instances[pNum].isCollapsed = false
+            return
         end
-        return PhunInfoUI.instances[pNum]
+        return
     end
 
     local core = getCore()
@@ -54,7 +49,6 @@ function PhunInfoUI.OnOpenPanel(playerObj)
     local pIndex = playerObj:getPlayerNum()
     PhunInfoUI.instances[pIndex] = PhunInfoUI:new(x, y - 200, width, height, playerObj);
     PhunInfoUI.instances[pIndex]:initialise();
-    PhunInfoUI.instances[pIndex]:instantiate();
 
     PhunInfoUI.instances[pIndex]:addToUIManager();
     triggerEvent(PhunZones.events.OnPhunZoneWelcomeOpened, PhunInfoUI.instances[pIndex])
@@ -62,20 +56,13 @@ function PhunInfoUI.OnOpenPanel(playerObj)
         PhunInfoUI.instances[pIndex]:rebuild()
     end
 
-    if playerObj:getPlayerNum() == 0 then
-        ISLayoutManager.RegisterWindow('PhunInfoUI', PhunInfoUI, PhunInfoUI.instances[pIndex])
-    end
+    ISLayoutManager.RegisterWindow('PhunInfoUI', PhunInfoUI, PhunInfoUI.instances[pIndex])
 
     return PhunInfoUI.instances[pIndex];
 
 end
 
-function PhunInfoUI:initialise()
-    ISPanelJoypad.initialise(self);
-end
-
 function PhunInfoUI:close()
-    self:setVisible(false);
     self:removeFromUIManager();
     PhunInfoUI.instances[self.pIndex] = nil
 end
@@ -85,113 +72,43 @@ function PhunInfoUI:setSelected(tabName, row)
     self.selectedTab = tabName
 end
 
-function PhunInfoUI:onMouseWheel(del)
-    self:setYScroll(self:getYScroll() - del * 30)
-    return true
-end
-
-function PhunInfoUI:onGainJoypadFocus(joypadData)
-    ISPanelJoypad.onGainJoypadFocus(self, joypadData);
-    self.joypadIndex = nil
-    self.barWithTooltip = nil
-end
-
-function PhunInfoUI:onMouseDown(x, y)
-    self.downX = self:getMouseX()
-    self.downY = self:getMouseY()
-    return true
-end
-function PhunInfoUI:onMouseUp(x, y)
-    self.downY = nil
-    self.downX = nil
-    if not self.dragging then
-        if self.onClick then
-            self:onClick()
-        end
-    else
-        self.dragging = false
-        self:setCapture(false)
-    end
-    return true
-end
-
-function PhunInfoUI:onMouseMove(dx, dy)
-
-    if self.downY and self.downX and not self.dragging then
-        if math.abs(self.downX - dx) > 4 or math.abs(self.downY - dy) > 4 then
-            self.dragging = true
-            self:setCapture(true)
-        end
-    elseif self.dragging then
-        self.dragging = false
-    end
-
-    if self.dragging then
-        local dx = self:getMouseX() - self.downX
-        local dy = self:getMouseY() - self.downY
-        self.userPosition = true
-        self:setX(self.x + dx)
-        self:setY(self.y + dy)
-    end
-end
-
-function PhunInfoUI:onLoseJoypadFocus(joypadData)
-    ISPanelJoypad.onLoseJoypadFocus(self, joypadData);
-end
-
-function PhunInfoUI:onJoypadDown(button)
-    if button == Joypad.AButton then
-    end
-    if button == Joypad.YButton then
-    end
-    if button == Joypad.BButton then
-    end
-    if button == Joypad.LBumper then
-        getPlayerInfoPanel(self.playerNum):onJoypadDown(button)
-    end
-    if button == Joypad.RBumper then
-        getPlayerInfoPanel(self.playerNum):onJoypadDown(button)
-    end
-end
-
-function PhunInfoUI:onJoypadDirDown()
-    self.joypadIndex = self.joypadIndex + 1
-    self:ensureVisible()
-    self:updateTooltipForJoypad()
-end
-
-function PhunInfoUI:onJoypadDirLeft()
-end
-
-function PhunInfoUI:onJoypadDirRight()
-end
-
 function PhunInfoUI:prerender()
-    ISPanelJoypad.prerender(self)
+    ISCollapsableWindowJoypad.prerender(self)
 
-    local background = getTexture("media/textures/PhunInfo_Background_1.png")
-    if background then
-        local maxWidth = self.width
-        local shrinkage = background:getWidth() / maxWidth
-        self:drawTextureScaledAspect(background, 1, 1, self.width - 2, (background:getHeight() / shrinkage) - 2, 0.7);
+    local th = self:titleBarHeight()
+    local rh = self:resizeWidgetHeight()
+    local selfWidth = self.width
+    local selfHeight = self.height
+    if not self.isCollapsed then
+        local background = getTexture("media/textures/PhunInfo_Background_1.png")
+        if background then
+            local backgroundWidth = background:getWidth()
+            local backgroundHeight = background:getHeight()
 
+            local width = math.max(selfWidth, backgroundWidth)
+            local height = width * (backgroundHeight / backgroundWidth)
+            self:drawTextureScaledAspect(background, selfWidth - width, th, width, height, 0.7);
+        end
     end
-
-    self:setStencilRect(0, 0, self.width, self.height)
+    self.tabPanel:setWidth(selfWidth)
+    for i, viewObject in ipairs(self.tabPanel.viewList) do
+        viewObject.view:setWidth(selfWidth)
+        -- viewObject.view:setHeight(selfHeight - th - rh)
+    end
 end
 
 function PhunInfoUI:createChildren()
+    ISCollapsableWindowJoypad.createChildren(self);
     self:setScrollChildren(true)
     self:addScrollBars()
 
-    self:addChild(getLabel(SandboxVars.PhunInfo.PhunInfoServerName or "", 10, 25, 400, FONT_HGT_MEDIUM))
+    local th = self:titleBarHeight()
+    local rh = self:resizeWidgetHeight()
 
-    self.closeButton = ISButton:new(self.width - 35, 10, 25, 25, "X", self, self.close)
-    self.closeButton:initialise()
-    self:addChild(self.closeButton)
+    self:addChild(getLabel(SandboxVars.PhunInfo.PhunInfoServerName or "", 10, th + 25, 400, FONT_HGT_MEDIUM))
 
     if isAdmin() then
-        self.refreshButton = ISButton:new(self.width - 100, 10, 50, 25, "Refresh", self, function()
+        self.refreshButton = ISButton:new(self.width - 60, th + 10, 50, 25, "Refresh", self, function()
             -- self.infoPanel:clearChildren()
             sendClientCommand(self.player, PhunInfo.name, PhunInfo.commands.reload, {})
         end)
@@ -228,9 +145,9 @@ function PhunInfoUI:createChildren()
 
 end
 
-function PhunInfoUI:render()
-    self:clearStencilRect()
-end
+-- function PhunInfoUI:render()
+--     self:clearStencilRect()
+-- end
 
 function PhunInfoUI:tabsRender()
     -- ISScrollingListBox.render(self)
@@ -302,12 +219,10 @@ end
 
 function PhunInfoUI:new(x, y, width, height, player)
     local o = {};
-    o = ISPanel:new(x, y, width, height, player);
+    o = ISCollapsableWindowJoypad:new(x, y, width, height, player);
     setmetatable(o, self);
     self.__index = self;
 
-    o.autoCloseTimestamp = getTimestamp() + (5);
-    o.alphaBits = 0
     o.variableColor = {
         r = 0.9,
         g = 0.55,
@@ -320,39 +235,13 @@ function PhunInfoUI:new(x, y, width, height, player)
         b = 0.7,
         a = 0.5
     };
-    o.data = {
-        stats = {
-            current = {},
-            total = {}
-        },
-        leaderboard = {}
-    }
+
     o.player = player
     o.pIndex = player:getPlayerNum()
-    o.userPosition = false
+    o.pin = true
     o.zOffsetLargeFont = 25;
     o.zOffsetMediumFont = 20;
     o.zOffsetSmallFont = 6;
-    o.moveWithMouse = true;
+    o:setTitle(SandboxVars.PhunInfo.PhunInfoServerName or "")
     return o;
-end
-
-function PhunInfoUI:RestoreLayout(name, layout)
-    if name == "PhunInfoUI" then
-        -- layout.visible = true
-        ISLayoutManager.DefaultRestoreWindow(self, layout)
-        self.userPosition = layout.userPosition == 'true'
-        self:setVisible(true)
-    end
-end
-
-function PhunInfoUI:SaveLayout(name, layout)
-    ISLayoutManager.DefaultSaveWindow(self, layout)
-    layout.width = nil
-    layout.height = nil
-    if self.userPosition then
-        layout.userPosition = 'true'
-    else
-        layout.userPosition = 'false'
-    end
 end

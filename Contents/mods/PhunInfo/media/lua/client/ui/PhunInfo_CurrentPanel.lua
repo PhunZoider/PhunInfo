@@ -52,6 +52,12 @@ function PhunInfoCurrentPanel:new(x, y, width, height, viewer)
     return o;
 end
 
+-- function PhunIndoCurrentPanel:prerender()
+--     ISPanel.prerender(self);
+--     local parent = self.parent;
+--     self.datas:setWidth(parent.width);
+-- end
+
 function PhunInfoCurrentPanel:createChildren()
     ISPanel.createChildren(self);
 

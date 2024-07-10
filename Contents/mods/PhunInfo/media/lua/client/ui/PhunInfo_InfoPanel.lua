@@ -48,7 +48,7 @@ function PhunInfoInfoPanel:new(x, y, width, height, viewer)
     o.filterWidgetMap = {}
     o.infos = {}
     o.viewer = viewer
-
+    o.title = "PhunInfo"
     PhunInfoInfoPanel.instance = o;
     return o;
 end
@@ -65,6 +65,7 @@ function PhunInfoInfoPanel:createChildren()
     self.datas.doDrawItem = self.drawDatas;
     self.datas.drawBorder = true;
     self.datas.onmousedown = function(_, row)
+        -- PhunInfoDetailsUI.OnOpenPanel(self.viewer, row.info)
         if row and row.info and row.info.onclick and PhunInfo.clickCommands[row.info.onclick] then
             PhunInfo.clickCommands[row.info.onclick](row.info)
         end
