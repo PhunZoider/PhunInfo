@@ -79,6 +79,7 @@ function PhunInfoCurrentPanel:createChildren()
         currentCatagories = {
             hours = 0,
             kills = 0,
+            bandit_kills = 0,
             car_kills = 0,
             pvp_kills = 0,
             -- damage = 0,
@@ -91,6 +92,7 @@ function PhunInfoCurrentPanel:createChildren()
         currentCatagories = {
             hours = 0,
             kills = 0,
+            bandit_kills = 0,
             car_kills = 0,
             sprinters = 0,
             -- damage = 0,

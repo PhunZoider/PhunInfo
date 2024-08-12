@@ -12,4 +12,6 @@ Sandbox_EN = {
     Sandbox_PhunInfo_ShowRunningStats = "Show Running Stats",
     Sandbox_PhunInfo_ShowRunningStats_tooltip = "Show/Hide running stats",
 
+    Sandbox_PhunInfo_ShowBanditsKilled = "Show Bandits Stats",
+    Sandbox_PhunInfo_ShowBanditsKilled_tooltip = "Show/Hide Bandits stats",
 }

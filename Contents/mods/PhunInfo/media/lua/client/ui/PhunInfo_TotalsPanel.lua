@@ -73,6 +73,7 @@ function PhunInfoTotalsPanel:createChildren()
         totalCategories = {
             hours = 0,
             deaths = 0,
+            bandit_kills = 0,
             pvp_deaths = 0,
             kills = 0,
             car_kills = 0,
@@ -89,6 +90,7 @@ function PhunInfoTotalsPanel:createChildren()
             hours = 0,
             deaths = 0,
             kills = 0,
+            bandit_kills = 0,
             car_kills = 0,
             sprinters = 0,
             -- damage = 0,
