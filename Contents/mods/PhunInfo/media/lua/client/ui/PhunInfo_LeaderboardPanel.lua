@@ -7,10 +7,6 @@ PhunInfoLeaderPanel = ISPanel:derive("PhunInfoLeaderPanel");
 local PhunStats = PhunStats
 
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
-local FONT_HGT_MEDIUM = getTextManager():getFontHeight(UIFont.Medium)
-local FONT_HGT_LARGE = getTextManager():getFontHeight(UIFont.Large)
-
-local HEADER_HGT = FONT_HGT_MEDIUM + 2 * 2
 
 function PhunInfoLeaderPanel:initialise()
     ISPanel.initialise(self);
@@ -54,7 +50,7 @@ end
 function PhunInfoLeaderPanel:createChildren()
     ISPanel.createChildren(self);
 
-    self.datas = ISScrollingListBox:new(0, HEADER_HGT, self.width, self.height - HEADER_HGT);
+    self.datas = ISScrollingListBox:new(0, 0, self.width, self.height);
     self.datas:initialise();
     self.datas:instantiate();
     self.datas.itemheight = FONT_HGT_SMALL + 4 * 2
@@ -67,6 +63,7 @@ function PhunInfoLeaderPanel:createChildren()
     self.datas:addColumn("Player", 125);
     self.datas:addColumn("Value", 250);
     self:addChild(self.datas);
+
 end
 
 function PhunInfoLeaderPanel:rebuild()
@@ -240,44 +237,11 @@ function PhunInfoLeaderPanel:rebuild()
         }
     end
 
-    -- if SandboxVars.PhunInfo.PhunInfoStatsShowPvP then
-    --     currentCatagories = {
-    --         hours = 0,
-    --         kills = 0,
-    --         deaths = 0,
-    --         -- damage = 0,
-    --         -- damage_taken = 0,
-    --         car_kills = 0,
-    --         pvp_kills = 0,
-    --         pvp_car_kills = 0,
-    --         pvp_deaths = 0,
-    --         ampules = 0,
-    --         smokes = 0,
-    --         sprinters = 0
-    --     }
-    -- else
-    --     currentCatagories = {
-    --         hours = 0,
-    --         kills = 0,
-    --         deaths = 0,
-    --         -- damage = 0,
-    --         -- damage_taken = 0,
-    --         car_kills = 0,
-    --         ampules = 0,
-    --         smokes = 0,
-    --         sprinters = 0
-    --     }
-    -- end
-
     for k, v in pairs(currentCatagories) do
         if not v.pvp or SandboxVars.PhunInfo.PhunInfoStatsShowPvP then
             self.datas:addItem(k, v)
         end
     end
-
-    -- for i, item in pairs(stats) do
-    --     self.datas:addItem(i, item)
-    -- end
 end
 
 function PhunInfoLeaderPanel:prerender()
@@ -297,6 +261,10 @@ function PhunInfoLeaderPanel:prerender()
         end
     end
     ISPanel.prerender(self);
+
+    self.datas:setY(self.datas.fontHgt)
+    self.datas:setWidth(self.width);
+    self.datas:setHeight(self.height - self.datas.fontHgt);
 end
 
 function PhunInfoLeaderPanel:drawDatas(y, item, alt)

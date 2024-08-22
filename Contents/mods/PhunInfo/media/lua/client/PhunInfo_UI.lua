@@ -14,7 +14,7 @@ local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
 local FONT_HGT_MEDIUM = getTextManager():getFontHeight(UIFont.Medium)
 local FONT_HGT_LARGE = getTextManager():getFontHeight(UIFont.Large)
 local FONT_SCALE = FONT_HGT_SMALL / 14
-
+local HEADER_HGT = FONT_HGT_MEDIUM + 2 * 2
 local function getLabel(text, x, y, w, h)
     local lbl = ISLabel:new(x, y, FONT_HGT_LARGE, text, 1, 1, 1, 1, UIFont.Large, true)
     lbl:initialise();
@@ -78,6 +78,7 @@ function PhunInfoUI:prerender()
     local th = self:titleBarHeight()
     local rh = self:resizeWidgetHeight()
     local selfWidth = self.width
+
     local selfHeight = self.height
     if not self.isCollapsed then
         local background = getTexture("media/textures/PhunInfo_Background_1.png")
@@ -90,10 +91,14 @@ function PhunInfoUI:prerender()
             self:drawTextureScaledAspect(background, selfWidth - width, th, width, height, 0.7);
         end
     end
-    self.tabPanel:setWidth(selfWidth)
+
+    self.tabPanel:setWidth(selfWidth - (self.tabPanel.x * 2))
+    self.tabPanel:setHeight(selfHeight - self.tabPanel.y - (self.tabPanel.x * 2))
+
     for i, viewObject in ipairs(self.tabPanel.viewList) do
-        viewObject.view:setWidth(selfWidth)
-        -- viewObject.view:setHeight(selfHeight - th - rh)
+        viewObject.view:setY(self.tabPanel.tabHeight)
+        viewObject.view:setWidth(self.tabPanel.width)
+        viewObject.view:setHeight(self.tabPanel.height - self.tabPanel.tabHeight)
     end
 end
 
@@ -101,7 +106,6 @@ function PhunInfoUI:createChildren()
     ISCollapsableWindowJoypad.createChildren(self);
     self:setScrollChildren(true)
     self:addScrollBars()
-
     local th = self:titleBarHeight()
     local rh = self:resizeWidgetHeight()
 
@@ -157,7 +161,7 @@ function PhunInfoUI:tabsRender()
     local overflowLeft = self.scrollX < 0
     local overflowRight = x + widthOfAllTabs > self.width
     if widthOfAllTabs > self:getWidth() then
-        self:setStencilRect(0, 0, self:getWidth(), self.tabHeight)
+        self:setStencilRect(0, 0, self:getWidth() - 21, self.tabHeight)
     end
     for i, viewObject in ipairs(self.viewList) do
         local tabWidth = (self.equalTabWidth and self.maxLength or viewObject.tabWidth) + 4
@@ -189,9 +193,10 @@ function PhunInfoUI:tabsRender()
     if overflowRight then
         local tex = getTexture("media/ui/ArrowRight.png")
         local butWid = tex:getWidthOrig() + butPadX * 2
-        self:drawRect(self:getWidth() - inset - butWid, 0, butWid, self.tabHeight - 1, 1, 0, 0, 0)
-        self:drawRectBorder(self:getWidth() - inset - butWid, -1, butWid, self.tabHeight + 1, 1, 0.4, 0.4, 0.4)
-        self:drawTexture(tex, self:getWidth() - butWid + butPadX, (self.tabHeight - tex:getHeightOrig()) / 2, 1, 1, 1, 1)
+        self:drawRect(self:getWidth() - inset - butWid - 20, 0, butWid, self.tabHeight - 1, 1, 0, 0, 0)
+        self:drawRectBorder(self:getWidth() - inset - butWid - 20, -1, butWid, self.tabHeight + 1, 1, 0.4, 0.4, 0.4)
+        self:drawTexture(tex, self:getWidth() - butWid - 20 + butPadX, (self.tabHeight - tex:getHeightOrig()) / 2, 1, 1,
+            1, 1)
     end
     if widthOfAllTabs > self:getWidth() then
         self:clearStencilRect()
@@ -215,6 +220,19 @@ function PhunInfoUI:rebuild()
         self.infoPanel:rebuild()
     end
 
+end
+
+function PhunInfo:RestoreLayout(name, layout)
+
+    ISLayoutManager.DefaultRestoreWindow(self, layout)
+    if layout.locked == 'false' then
+        self.locked = false;
+        self.lockButton:setImage(self.chatUnLockedButtonTexture);
+    else
+        self.locked = true;
+        self.lockButton:setImage(self.chatLockedButtonTexture);
+    end
+    self:recalcSize();
 end
 
 function PhunInfoUI:new(x, y, width, height, player)

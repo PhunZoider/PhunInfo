@@ -118,6 +118,12 @@ function PhunInfoCurrentPanel:createChildren()
     self:addChild(self.datas);
 end
 
+function PhunInfoCurrentPanel:prerender()
+    ISPanel.prerender(self);
+    local parent = self.parent;
+    self.datas:setWidth(parent.width - 20);
+end
+
 function PhunInfoCurrentPanel:rebuild()
 end
 

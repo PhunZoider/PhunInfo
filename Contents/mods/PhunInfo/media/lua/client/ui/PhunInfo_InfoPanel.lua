@@ -55,7 +55,7 @@ end
 
 function PhunInfoInfoPanel:createChildren()
     ISPanel.createChildren(self);
-    self.datas = ISScrollingListBox:new(0, HEADER_HGT, self.width, self.height - HEADER_HGT);
+    self.datas = ISScrollingListBox:new(0, 0, self.width, self.height);
     self.datas:initialise();
     self.datas:instantiate();
     self.datas.itemheight = FONT_HGT_MEDIUM + 4 * 2
@@ -65,13 +65,23 @@ function PhunInfoInfoPanel:createChildren()
     self.datas.doDrawItem = self.drawDatas;
     self.datas.drawBorder = true;
     self.datas.onmousedown = function(_, row)
-        -- PhunInfoDetailsUI.OnOpenPanel(self.viewer, row.info)
         if row and row.info and row.info.onclick and PhunInfo.clickCommands[row.info.onclick] then
             PhunInfo.clickCommands[row.info.onclick](row.info)
         end
     end
     self:addChild(self.datas);
     self.datas:setScrollWidth(0);
+
+end
+
+function PhunInfoInfoPanel:prerender()
+    -- local width = self.parent.width
+    -- self.datas:setWidth(self.parent.width);
+    -- self.datas:setHeight(self.parent.height);
+
+    self.datas:setY(0)
+    self.datas:setWidth(self.width);
+    self.datas:setHeight(self.height);
 
 end
 
@@ -118,8 +128,14 @@ function PhunInfoInfoPanel:drawDatas(y, item, alt)
         return y + messageHeight
     end
 
-    self:drawRectBorder(0, (y), self:getWidth(), item.height, self.borderColor.a, self.borderColor.r,
-        self.borderColor.g, self.borderColor.b);
+    local width = self.parent.width - padding
+    item.item.richText:setWidth(width)
+    item.item.maxLineWidth = width - 10
+
+    -- print("drawDataas ", tostring(self:getWidth()), " :: ", tostring(width))
+
+    self:drawRectBorder(0, (y), width, item.height, self.borderColor.a, self.borderColor.r, self.borderColor.g,
+        self.borderColor.b);
     local info = item.item.info
     local clipX = 0
     local clipX2 = self:getWidth()
@@ -142,9 +158,9 @@ function PhunInfoInfoPanel:drawDatas(y, item, alt)
             cy2 = self.height - cy
         end
         local vscrollWidth = self.vscroll:getWidth()
-        local width = self.width
+
         local twidth = item.item.richText.backgroundImage:getWidth()
-        local left = width - twidth
+        local left = self:getWidth() - twidth
         self:setStencilRect(clipX, cy, clipX2, cy2)
         local bgX = left + 1
         local bgY = y + 1
