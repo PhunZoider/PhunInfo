@@ -4,7 +4,7 @@ return {{
     onclick = "discordUrl",
     value = "Welcome to PhunZoid. Click here to join our discord channel to keep up to date with changes and season wipe schedules!"
 }, {
-    title = "Badnits are back!",
+    title = "Bandits are back!",
     backgroundImage = "media/textures/PhunInfo_Background_2.png",
     value = "Be on the lookout. Some friendly, most are foes. LIsten out for audio cues and be prepared to run or fight!"
 }, {
