@@ -102,7 +102,6 @@ function PhunInfoAdminPlayersUI:save()
         lastWorldHours = tonumber(self.lastWorldHours:getText())
     }
     sendClientCommand(getPlayer(), PhunStats.name, PhunStats.commands.adminUpdatePlayerOnline, data)
-    PhunTools:printTable(data)
     self:close()
 end
 
